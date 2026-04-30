@@ -1,0 +1,11 @@
+models:
+  - name: s_cx_convo
+    description: "Silver Layer"
+    columns:
+      - name: conversation_id
+        description: "The primary key for this table"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
