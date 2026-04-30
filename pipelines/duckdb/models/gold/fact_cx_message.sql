@@ -5,8 +5,10 @@ with cte_explode as (
     , customer_id
   from {{ ref('s_cx_convo_scd1') }}
 )
-select 
-    messages.message_id as message_id
+, cte_clean_columns as (
+select
+    hash(messages.message_id) as message_key
+  , messages.message_id as message_id
   , conversation_id
   , case when messages.role = 'agent' then 'bot_99999999' else customer_id end as sender_id
   , case when messages.role = 'customer' then 'bot_99999999' else customer_id end as receiver_id
@@ -14,3 +16,14 @@ select
   , messages.text as message_text
   , messages.created_at as message_sent_dtt
 from cte_explode
+)
+select
+    message_key as message_key
+  , cast(message_id as varchar) as message_id
+  , cast(conversation_id as varchar) as conversation_id
+  , cast(sender_id as varchar) as sender_id
+  , cast(receiver_id as varchar) as receiver_id
+  , cast(sender_role as varchar) as sender_role
+  , cast(message_text as varchar) as message_text
+  , cast(message_sent_dtt as timestamp) as message_sent_dtt
+from cte_clean_columns

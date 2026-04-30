@@ -3,7 +3,7 @@ models:
     description: "Silver Layer"
     columns:
       - name: conversation_id
-        description: "The primary key for this table"
+        description: "The primary key for conversations"
         data_type: varchar
         data_tests:
           - unique
@@ -14,17 +14,179 @@ models:
         data_type: varchar
 
       - name: messages
-        description: "The messages exchanged back and forth"
+        description: "Nested messages exchanged back and forth"
         data_type: json
 
       - name: metadata
-        description: "metadata related to customer"
+        description: "Nested metadata related to customer"
         data_type: json
 
       - name: resolution
-        description: "Final resolution of conversation"
+        description: "Nested final resolution of conversation"
         data_type: json
 
       - name: load_dtt
-        description: "Final resolution of conversation"
-        data_type: timstamp
+        description: "Load timestamp"
+        data_type: timestamp
+
+  - name: dim_cx_issue
+    description: "Dimension table for customer issues"
+    columns:
+      - name: issue_key
+        description: "Surrogate key for the issue"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: conversation_id
+        description: "Reference to the conversation"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: primary_issue
+        description: "Primary issue type"
+        data_type: varchar
+
+      - name: secondary_issue
+        description: "Secondary issue details"
+        data_type: varchar
+
+      - name: issue_resolved
+        description: "Whether the issue was resolved"
+        data_type: boolean
+
+      - name: resolution_type
+        description: "Type of resolution"
+        data_type: varchar
+
+      - name: resolution_notes
+        description: "Notes on the resolution"
+        data_type: varchar
+
+      - name: issue_start_dtt
+        description: "Timestamp when the issue started"
+        data_type: timestamp
+
+      - name: issue_resolved_dtt
+        description: "Timestamp when the issue was resolved"
+        data_type: timestamp
+
+  - name: dim_cx_metadata
+    description: "Dimension table for conversation metadata"
+    columns:
+      - name: conversation_key
+        description: "Surrogate key for the conversation"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: conversation_id
+        description: "Conversation identifier"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier"
+        data_type: varchar
+
+      - name: category
+        description: "Conversation category"
+        data_type: varchar
+
+      - name: issue_type
+        description: "Type of issue"
+        data_type: varchar
+
+      - name: product
+        description: "Product related to the conversation"
+        data_type: varchar
+
+      - name: status
+        description: "Status of the conversation"
+        data_type: varchar
+
+      - name: priority
+        description: "Priority level"
+        data_type: varchar
+
+      - name: conversation_first_message_dtt
+        description: "Timestamp of the first message"
+        data_type: timestamp
+
+      - name: conversation_last_message_dtt
+        description: "Timestamp of the last message"
+        data_type: timestamp
+
+      - name: day
+        description: "Day of the conversation"
+        data_type: varchar
+
+      - name: has_curveball
+        description: "Whether the conversation has a curveball"
+        data_type: boolean
+
+      - name: spans_multiple_days
+        description: "Whether the conversation spans multiple days"
+        data_type: boolean
+
+      - name: is_multi_issue
+        description: "Whether it's a multi-issue conversation"
+        data_type: boolean
+
+      - name: is_long_conversation
+        description: "Whether it's a long conversation"
+        data_type: boolean
+
+  - name: fact_cx_message
+    description: "Fact table for individual messages"
+    columns:
+      - name: message_key
+        description: "Surrogate key for the message"
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: message_id
+        description: "Original message identifier"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: conversation_id
+        description: "Reference to the conversation"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: sender_id
+        description: "ID of the message sender"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: receiver_id
+        description: "ID of the message receiver"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: sender_role
+        description: "Role of the sender (agent or customer)"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: message_text
+        description: "Content of the message"
+        data_type: varchar
+
+      - name: message_sent_dtt
+        description: "Timestamp when the message was sent"
+        data_type: timestamp
+        data_tests:
+          - not_null

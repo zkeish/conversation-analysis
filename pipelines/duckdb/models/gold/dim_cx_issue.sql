@@ -11,13 +11,13 @@ select
 from {{ ref('s_cx_convo_scd1') }}
 )
 select distinct
-    md5(concat(conversation_id, primary_issue, secondary_issue)) as issue_id
-  , conversation_id
-  , primary_issue
-  , secondary_issue
-  , issue_resolved
-  , resolution_type
-  , resolution_notes
-  , issue_start_dtt
-  , issue_resolved_dtt
+    hash(conversation_id, primary_issue, secondary_issue) as issue_key
+  , cast(conversation_id as varchar) as conversation_id
+  , cast(primary_issue as varchar) as primary_issue
+  , cast(secondary_issue as varchar) as secondary_issue
+  , cast(issue_resolved as boolean) as issue_resolved
+  , cast(resolution_type as varchar) as resolution_type
+  , cast(resolution_notes as varchar) as resolution_notes
+  , cast(issue_start_dtt as timestamp) as issue_start_dtt
+  , cast(issue_resolved_dtt as timestamp) as issue_resolved_dtt
 from cte_explode
