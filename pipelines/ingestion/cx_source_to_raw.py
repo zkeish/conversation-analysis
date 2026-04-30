@@ -100,6 +100,7 @@ class S2R:
                     if not exists:
                         create_table.append(f'{col_name} {col_data_type}')
                 elif col_name not in target:
+                    select_col.append(col_name)
                     if exists:
                         alter_table.append(f'ALTER TABLE {self.BRONZE_TABLE} ADD COLUMN {col_name} {col_data_type};')
                     else:
@@ -109,7 +110,7 @@ class S2R:
 
         return select_col, alter_table, create_table
     
-    def load_data(self, select_col: list, alter_table: list, create_table: list, source_path: str) -> None:
+    def load_data(self, select_col: list, alter_table: list, create_table: list, source_path: str, file_name: str) -> None:
         select_str = ", ".join(select_col)
         create_table_str = ", ".join(create_table)
         
@@ -121,10 +122,11 @@ class S2R:
             if len(create_table) > 0:
                 con.sql(f"""CREATE TABLE IF NOT EXISTS {self.BRONZE_TABLE} (
                                     {create_table_str}
-                                    , file_name as {source_path}
+                                    , file_name varchar
                                 );""")
             
-            con.sql(f"insert into {self.BRONZE_TABLE} select {select_str} from '{source_path}'")
+            con.sql(f"insert into {self.BRONZE_TABLE} select {select_str}, '{source_path}' as file_path from '{source_path}';")
+            con.sql(f"insert into {self.TRACKING_TABLE} (file_name, ingest_dtt) VALUES ('{file_name}', CURRENT_TIMESTAMP);")
 
     def ingest_files(self, files: list):
         for file in files:
@@ -134,7 +136,7 @@ class S2R:
                 target = os.path.join(self.TARGET_FOLDER_PATH, target_file_name)
                 Utils.cp(source, target)
                 select_col, alter_table, create_table = self.analyze_schema(target)
-                self.load_data(select_col, alter_table, create_table, target)
+                self.load_data(select_col, alter_table, create_table, target, file)
             except Exception as e:
                 print(f'Issue transfering file to raw storage:')
                 raise e
