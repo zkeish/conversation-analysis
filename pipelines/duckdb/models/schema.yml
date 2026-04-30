@@ -9,3 +9,18 @@ models:
           - unique
           - not_null
 
+      - name: customer_id
+        description: "The ID for each unique customer"
+        data_type: varchar
+
+      - name: messages
+        description: "The messages exchanged back and forth"
+        data_type: json
+
+      - name: metadata
+        description: "metadata related to customer"
+        data_type: json
+
+      - name: resolution
+        description: "Final resolution of conversation"
+        data_type: json
