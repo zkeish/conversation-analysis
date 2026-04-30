@@ -19,6 +19,7 @@ with cte_normalize as (
 )
 select
     conversation_key as conversation_key
+  , hash(customer_id) as customer_key
   , cast(conversation_id as varchar) as conversation_id
   , cast(customer_id as varchar) as customer_id
   , cast(category as varchar) as category

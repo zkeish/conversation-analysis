@@ -34,14 +34,14 @@ models:
     columns:
       - name: issue_key
         description: "Surrogate key for the issue"
-        data_type: varchar
+        data_type: ubigint
         data_tests:
           - unique
           - not_null
 
-      - name: conversation_id
-        description: "Reference to the conversation"
-        data_type: varchar
+      - name: conversation_key
+        description: "Surrogate key for the conversation"
+        data_type: ubigint
         data_tests:
           - not_null
 
@@ -78,9 +78,15 @@ models:
     columns:
       - name: conversation_key
         description: "Surrogate key for the conversation"
-        data_type: varchar
+        data_type: ubigint
         data_tests:
           - unique
+          - not_null
+
+      - name: customer_key
+        description: "Surrogate key for the customer"
+        data_type: ubigint
+        data_tests:
           - not_null
 
       - name: conversation_id
@@ -146,31 +152,25 @@ models:
     columns:
       - name: message_key
         description: "Surrogate key for the message"
-        data_type: varchar
+        data_type: ubigint
         data_tests:
           - unique
           - not_null
 
+      - name: conversation_key
+        description: "Surrogate key for the conversation"
+        data_type: ubigint
+        data_tests:
+          - not_null
+
+      - name: customer_key
+        description: "Surrogate key for the customer"
+        data_type: ubigint
+        data_tests:
+          - not_null
+
       - name: message_id
         description: "Original message identifier"
-        data_type: varchar
-        data_tests:
-          - not_null
-
-      - name: conversation_id
-        description: "Reference to the conversation"
-        data_type: varchar
-        data_tests:
-          - not_null
-
-      - name: sender_id
-        description: "ID of the message sender"
-        data_type: varchar
-        data_tests:
-          - not_null
-
-      - name: receiver_id
-        description: "ID of the message receiver"
         data_type: varchar
         data_tests:
           - not_null

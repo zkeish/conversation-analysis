@@ -12,7 +12,7 @@ from {{ ref('s_cx_convo_scd1') }}
 )
 select distinct
     hash(conversation_id, primary_issue, secondary_issue) as issue_key
-  , cast(conversation_id as varchar) as conversation_id
+  , hash(conversation_id) as conversation_key
   , cast(primary_issue as varchar) as primary_issue
   , cast(secondary_issue as varchar) as secondary_issue
   , cast(issue_resolved as boolean) as issue_resolved
