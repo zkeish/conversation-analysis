@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+example/
+raw/
+target/
+dbt_packages/
+logs/
+
+*.wal
+*.tmp/
+
+*.duckdb*
+*.wal
+*.tmp/
