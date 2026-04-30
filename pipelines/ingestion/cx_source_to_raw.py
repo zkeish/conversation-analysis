@@ -18,11 +18,11 @@ CURRENT_TIMESTAMP = datetime.now()
 class S2R:
 
     def __init__(self, dataset):
-        self.TRACKING_TABLE = f'bronze.{dataset}_processed_files'
-        self.BRONZE_TABLE = f'bronze.b_{dataset}_convo'
+        self.DATASET = dataset
+        self.TRACKING_TABLE = f'raw.{dataset}_processed_files'
         self.SOURCE_FOLDER_PATH = os.path.join(WORKING_DIR, 'external_data')
         self.TARGET_FOLDER_PATH = os.path.join(WORKING_DIR, f'raw/{dataset}')
-        self.DATABASE = os.path.join(WORKING_DIR, f'pipelines/duckdb/{ENV}.duckdb')
+        self.DATABASE = os.path.join(WORKING_DIR, f'pipelines/duckdb/{dataset}_ingestion.duckdb')
         self.METADATA = os.path.join(WORKING_DIR, 'pipelines/duckdb/models/schema.yml')
 
     def connect_db(self) -> duckdb.DuckDBPyConnection:
@@ -33,7 +33,7 @@ class S2R:
 
     def create_tracking_table(self) -> None:
         with self.connect_db() as con:
-            con.sql('create schema if not exists bronze')
+            con.sql('create schema if not exists raw')
             con.sql(f"""CREATE TABLE IF NOT EXISTS {self.TRACKING_TABLE} (
                                 file_name VARCHAR PRIMARY KEY,
                                 ingest_dtt TIMESTAMP
@@ -49,12 +49,12 @@ class S2R:
         for file in files:
             try:
                 source = os.path.join(self.SOURCE_FOLDER_PATH, file)
-                target_file_name = Utils.format_file_datetime('cx_data', CURRENT_TIMESTAMP, 'parquet')
+                target_file_name = Utils.format_file_datetime(self.DATASET, CURRENT_TIMESTAMP, 'parquet')
                 target = os.path.join(self.TARGET_FOLDER_PATH, target_file_name)
                 with self.connect_db() as con:
                     df = con.sql(f"select * from '{source}'").to_arrow_table()
                     pq.write_table(df, target)
-                    con.sql(f"insert into {self.TRACKING_TABLE} (file_name, ingest_dtt) VALUES ('{target}', CURRENT_TIMESTAMP);")
+                    con.sql(f"insert into {self.TRACKING_TABLE} (file_name, ingest_dtt) VALUES ('{file}', CURRENT_TIMESTAMP);")
             except Exception as e:
                 print(f'Issue transfering file to raw storage:')
                 raise e
