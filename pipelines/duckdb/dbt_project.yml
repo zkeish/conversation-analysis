@@ -1,6 +1,6 @@
-name: 'pipelines'
+name: 'duckdb'
 version: '1.0.0'
-profile: 'pipelines'
+profile: 'duckdb'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -14,7 +14,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  pipelines:
+  duckdb:
     bronze:
       +schema: bronze
       +materialized: table

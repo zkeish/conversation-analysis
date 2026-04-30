@@ -1,0 +1,1 @@
+select * from '../../raw/sample_tickets_v6.json'
