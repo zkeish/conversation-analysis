@@ -1,1 +1,0 @@
-select * from bronze.b_cx_convo

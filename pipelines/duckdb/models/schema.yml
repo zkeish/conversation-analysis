@@ -1,5 +1,5 @@
 models:
-  - name: s_cx_convo
+  - name: s_cx_convo_scd1
     description: "Silver Layer"
     columns:
       - name: conversation_id
@@ -24,3 +24,7 @@ models:
       - name: resolution
         description: "Final resolution of conversation"
         data_type: json
+
+      - name: load_dtt
+        description: "Final resolution of conversation"
+        data_type: timstamp
