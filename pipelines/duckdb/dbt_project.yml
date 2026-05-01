@@ -29,3 +29,8 @@ models:
       +schema: gold
       +materialized: table
       +tags: ['gold']
+
+    cx:
+      +schema: cx
+      +materialized: view
+      +tags: ['conformed_layer']
