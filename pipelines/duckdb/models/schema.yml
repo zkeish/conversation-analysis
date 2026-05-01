@@ -49,6 +49,10 @@ models:
         description: "Primary issue type"
         data_type: varchar
 
+      - name: issue_type
+        description: "Normalized issue type from metadata"
+        data_type: varchar
+
       - name: secondary_issue
         description: "Secondary issue details"
         data_type: varchar

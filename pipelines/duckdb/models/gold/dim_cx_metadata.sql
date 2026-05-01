@@ -4,7 +4,6 @@ with cte_normalize as (
     , conversation_id
     , customer_id
     , metadata.category as category
-    , metadata.issue_type as issue_type
     , metadata.product as product
     , metadata.status as status
     , metadata.priority as priority
@@ -17,13 +16,12 @@ with cte_normalize as (
     , case when metadata.is_long_conversation then true else false end as is_long_conversation
   from {{ ref('s_cx_convo_scd1') }}
 )
-select
+select distinct
     conversation_key as conversation_key
   , hash(customer_id) as customer_key
   , cast(conversation_id as varchar) as conversation_id
   , cast(customer_id as varchar) as customer_id
   , cast(category as varchar) as category
-  , cast(issue_type as varchar) as issue_type
   , cast(product as varchar) as product
   , cast(status as varchar) as status
   , cast(priority as varchar) as priority
