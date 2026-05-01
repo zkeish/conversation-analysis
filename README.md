@@ -24,7 +24,7 @@ dbt run --target {environment}
 dbt test --target {environment}
 ```
 
-## DuckDB Local UI for Visualizing the data
+## DuckDB Local UI to quickly query the data
 ```
 curl https://install.duckdb.org | sh
 duckdb ui

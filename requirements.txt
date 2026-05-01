@@ -6,3 +6,5 @@ pandas
 pyyaml
 pyarrow
 requests
+scikit-learn
+google-genai
