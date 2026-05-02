@@ -1,6 +1,39 @@
 models:
+  - name: b_cx_convo
+    description: "Bronze Layer - Raw conversation data ingestion"
+    columns:
+      - name: conversation_id
+        description: "Unique conversation identifier"
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier"
+        data_type: varchar
+
+      - name: messages
+        description: "Array of message objects in the conversation"
+        data_type: json
+
+      - name: metadata
+        description: "Conversation metadata as JSON object"
+        data_type: json
+
+      - name: resolution
+        description: "Resolution information as JSON object"
+        data_type: json
+
+      - name: load_dtt
+        description: "Load timestamp"
+        data_type: timestamp
+
+      - name: filename
+        description: "Source filename"
+        data_type: varchar
+
   - name: s_cx_convo_scd1
-    description: "Silver Layer"
+    description: "Silver Layer - Deduplicated conversations with SCD Type 1"
     columns:
       - name: conversation_id
         description: "The primary key for conversations"
@@ -192,5 +225,84 @@ models:
       - name: message_sent_dtt
         description: "Timestamp when the message was sent"
         data_type: timestamp
+        data_tests:
+          - not_null
+
+  - name: mtc_cx_resolved
+    description: "CX Layer - Resolved conversations with embeddings for ML models"
+    columns:
+      - name: conversation_key
+        description: "Surrogate key for the conversation"
+        data_type: ubigint
+        data_tests:
+          - unique
+          - not_null
+
+      - name: issue_type
+        description: "Type of issue resolved"
+        data_type: varchar
+
+      - name: product_name
+        description: "Product related to the resolved issue"
+        data_type: varchar
+
+      - name: resolution_type
+        description: "Type of resolution applied"
+        data_type: varchar
+
+      - name: resolution_notes
+        description: "Notes on the resolution"
+        data_type: varchar
+
+      - name: conversation_text
+        description: "Full concatenated conversation text"
+        data_type: varchar
+
+      - name: embedding
+        description: "Vector embedding of the conversation (768 dimensions)"
+        data_type: float
+
+  - name: vw_anomalies
+    description: "CX Layer - View detecting anomalies and spikes in issue trends"
+    columns:
+      - name: issue_date
+        description: "Date of the issue"
+        data_type: date
+
+      - name: issue_type
+        description: "Type of issue"
+        data_type: varchar
+
+      - name: priority
+        description: "Priority level of the issue"
+        data_type: varchar
+
+      - name: issue_count
+        description: "Count of issues on the day"
+        data_type: double
+
+      - name: yesterdays_count
+        description: "Count of issues on the previous day"
+        data_type: double
+
+      - name: average_2_day
+        description: "Average issue count over 2-day baseline"
+        data_type: double
+
+      - name: day_over_day_change
+        description: "Percentage change from yesterday"
+        data_type: double
+
+      - name: baseline_change
+        description: "Percentage change from baseline average"
+        data_type: double
+
+      - name: spike_from_yesterday
+        description: "Flag indicating spike from previous day threshold"
+        data_type: boolean
+
+      - name: spike_from_baseline
+        description: "Flag indicating spike from baseline threshold"
+        data_type: boolean
         data_tests:
           - not_null
