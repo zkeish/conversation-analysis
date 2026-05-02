@@ -5,10 +5,11 @@ Parses raw conversation data and intelligently provides context regarding anomal
 This project ingests customer conversation data, processes it through a dbt pipeline in DuckDB, and generates insights like resolved issues and anomaly detection.
 
 ## Part 1
-[Anomaly detection notebook](src/eda/anomalies.ipynb)
+- [Anomaly detection notebook](src/eda/anomalies.ipynb)
 
 ## Part 2
-[Chatbot](src/agent/app.py)
+- [Chatbot](src/agent/app.py)
+- [Results](chatbot_interactions.md)
 
 ## Prerequisites
 - Python 3.12
