@@ -6,6 +6,6 @@ pandas
 pyyaml
 pyarrow
 requests
-scikit-learn
+matplotlib
 google-genai
 rich

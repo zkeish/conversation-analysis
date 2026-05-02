@@ -230,3 +230,5 @@ logs/
 *.duckdb*
 *.wal
 *.tmp/
+
+.DS_Store
