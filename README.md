@@ -84,7 +84,7 @@ erDiagram
     
     DIM_CX_METADATA {
         ubigint conversation_key "surrogate key, PK, FK"
-        ubigint customer_key
+        ubigint customer_key "FK"
         varchar conversation_id
         varchar customer_id
         varchar category
