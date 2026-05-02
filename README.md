@@ -14,6 +14,15 @@ This project ingests customer conversation data, processes it through a dbt pipe
 ## Prerequisites
 - Python 3.12
 - DuckDB (for local querying)
+- `.env` in root
+- `external_data` folder in root with source data
+
+## Example .env
+```
+ENV="dev"
+WORKING_DIR="/Users/{username}/{subfolders}/conversation-analysis/"
+GEMINI_API_KEY="{API-KEY}"
+```
 
 ## Installation
 1. Create and activate a Python virtual environment:
