@@ -110,3 +110,13 @@ erDiagram
     
 ```
 
+## Chatbot Worklow
+The workflow from embedding to chatting with LLM to get recommended resolution
+
+```mermaid
+graph TD
+A["Resolved Tickets Table <br/> DuckDB <br/> (batch)"] --> B["Embed vectors in DuckDB <br/> Google Embedding Model <br/> (batch)"]
+B --> C["Query Context <br/> DuckDB <br/> (runtime)"]
+C --> D["Generate prompt <br/> Python <br/> (runtime)"]
+D --> E["Call Model <br/> Gemma 4 <br/> (runtime)"]
+E --> F["Return Resolution <br/> Gemma 4 <br/> (runtime)"]
