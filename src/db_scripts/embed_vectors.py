@@ -17,8 +17,7 @@ CLIENT = genai.Client(
 
 class VectorDB:
 
-    def __init__(self, dataset):
-        self.DATABASE = os.path.join(WORKING_DIR, f'pipelines/duckdb/{ENV}.duckdb')
+    DATABASE = os.path.join(WORKING_DIR, f'pipelines/duckdb/{ENV}.duckdb')
 
     def generate_vector(self, text: str) -> list[float] | None:
         response = CLIENT.models.embed_content(
@@ -60,17 +59,8 @@ class VectorDB:
             con.sql('SET hnsw_enable_experimental_persistence = true')
             con.execute("create index idx on cx.mtc_cx_resolved using HNSW (embedding) with (metric = 'cosine')")
     
-    def pull_context_table(self, conversation_text) -> pd.DataFrame:
-        with self.connect_db() as con:
-            # vector = self.generate_vector(conversation_text)
-            vector = [i for i in range(1,769)]
-            df = con.execute("""select * ,array_cosine_similarity(embedding, ?::float[768]) as score from cx.mtc_cx_resolved order by score desc limit 3""", [vector]).df()
-            return df
-    
     def main(self):
-        # self.embed_vector()
-        df = self.pull_context_table("Autopilot but was told it's included")
-        print(df)
-        # print(vector, type(vector))
+        self.embed_vector()
 
-VectorDB('cx').main()
+if __name__ == "__main__":
+    VectorDB().main()

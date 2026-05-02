@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from ..utils import Utils
+from utils import Utils
 
 import duckdb
 from dotenv import load_dotenv
@@ -67,4 +67,5 @@ class S2R:
 
 
 # Process cx dataset
-S2R('cx').main()
+if __name__ == "__main__":
+    S2R('cx').main()
