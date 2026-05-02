@@ -14,9 +14,10 @@ source .venv/bin/activate
 python3.12 -m pip install -r requirements.txt
 ```
 
-## Run dbt 
+## Execute Orchestration
 ```
-dbt run --target {environment}
+chmod +x src/orchestrator.sh
+./src/orchestrator.sh
 ```
 
 ## Test dbt

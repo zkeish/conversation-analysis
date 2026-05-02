@@ -38,20 +38,17 @@ class VectorDB:
             con.sql('INSTALL vss;')
             con.sql('LOAD vss;')
 
-    def embed_vector(self) -> None:
+    def embed_vector(self, limit: int | None=1500) -> None:
         with self.connect_db() as con:
-            df = con.sql("select * from cx.mtc_cx_resolved where embedding is null limit 1").df()
-            for i, row in df.iterrows():
-                conversation_key = row.conversation_key
-                issue_type = row.issue_type
-                product_name = row.product_name
-                resolution_type = row.resolution_type
-                resolution_notes = row.resolution_notes
-                conversation_text = row.conversation_text
-                print(conversation_key)
-                # vector = self.generate_vector(conversation_text)
-                vector = [i for i in range(1,769)]
-                con.execute(f"update cx.mtc_cx_resolved set embedding = ? where conversation_key = ?", [vector, conversation_key])
+            df = con.execute(f"select * from cx.mtc_cx_resolved where embedding is null limit ?", [limit]).df()
+            if not df.empty:
+                for i, row in df.iterrows():
+                    conversation_key = row.conversation_key
+                    conversation_text = row.conversation_text
+                    print(conversation_key)
+                    vector = self.generate_vector(conversation_text)
+                    # vector = [i for i in range(1,769)] # For testing
+                    con.execute(f"update cx.mtc_cx_resolved set embedding = ? where conversation_key = ?", [vector, conversation_key])
 
     def add_index(self) ->None:
         # Experimental so not going to use
@@ -60,7 +57,8 @@ class VectorDB:
             con.execute("create index idx on cx.mtc_cx_resolved using HNSW (embedding) with (metric = 'cosine')")
     
     def main(self):
-        self.embed_vector()
+        self.load_vss()
+        self.embed_vector(limit=1500)
 
 if __name__ == "__main__":
     VectorDB().main()
