@@ -54,8 +54,7 @@ GEMINI_API_KEY="{API-KEY}"
 1. Query data locally with DuckDB UI:
 
    ```
-   curl https://install.duckdb.org | sh
-   duckdb ui
+   duckdb -ui
    ```
 
 ## Data Pipeline
