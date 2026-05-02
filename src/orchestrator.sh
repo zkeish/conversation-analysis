@@ -16,11 +16,19 @@ else
 fi
 
 if [ $? -eq 0 ]; then
+    echo "dbt models, testing dbt models..."
+    dbt test
+else
+    echo "dbt run failed, skipping dbt test"
+    exit 1
+fi
+
+if [ $? -eq 0 ]; then
     echo "dbt run succeeded, starting embeddings..."
     cd ../../src/db_scripts
     python embed_vectors.py
 else
-    echo "dbt run failed, skipping embeddings"
+    echo "dbt test failed, skipping embeddings"
     exit 1
 fi
 

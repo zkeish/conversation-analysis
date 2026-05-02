@@ -8,3 +8,4 @@ pyarrow
 requests
 scikit-learn
 google-genai
+rich

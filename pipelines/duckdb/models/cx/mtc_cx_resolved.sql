@@ -27,11 +27,14 @@ where issue_resolved
 group by 1,2,3,4,5
 )
 select
-      *
-    , cast(null as float[768]) as embedding
-
-from cte_agg
+      a.*
+    , coalesce(t.embedding, cast(null as float[768])) as embedding
+from cte_agg a
+left join {{ this }} t
+  on a.conversation_key = t.conversation_key
 
 {% if is_incremental() %}
-    where conversation_key not in (select conversation_key from cte_agg where embedding is not null)
+where a.conversation_key not in (
+    select conversation_key from {{ this }}
+)
 {% endif %}

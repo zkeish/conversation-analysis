@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
 import pandas as pd
+from rich.console import Console
 
 load_dotenv()
 
@@ -113,12 +114,12 @@ Resolved Tickets:
 {context}
 """
         response = CLIENT.models.generate_content(model="gemma-4-31b-it", contents=prompt)
-        return f"""{response.text}
+        return f"""{response.text} \n
 conversation_keys used: {keys_str}
-\n"""
+"""
 
     def main(self) -> None:
-
+        console = Console(width=80)
         while True:
             ticket = input("Open Ticket > ").strip()
 
@@ -126,8 +127,7 @@ conversation_keys used: {keys_str}
                 break
 
             answer = self.ask_chatbot(ticket)
-
-            print(f"\n {answer}")
+            console.print(f"\n {answer}")
             print("\n" + "-" * 80 + "\n")
 
 
