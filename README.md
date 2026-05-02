@@ -32,7 +32,7 @@ This project ingests customer conversation data, processes it through a dbt pipe
    curl https://install.duckdb.org | sh
    duckdb ui
    ```
-   
+
 3. Talk to chatbot in command line:
    ```
    Open Ticket > {Your ticket context goes here}

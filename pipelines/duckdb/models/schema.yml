@@ -306,3 +306,28 @@ models:
         data_type: boolean
         data_tests:
           - not_null
+
+  - name: vw_open_tickets
+    description: "CX Layer - View of unresolved conversations with earliest customer message"
+    columns:
+      - name: conversation_key
+        description: "Surrogate key for the conversation"
+        data_type: ubigint
+        data_tests:
+          - not_null
+
+      - name: issue_type
+        description: "Type of the unresolved issue"
+        data_type: varchar
+
+      - name: product_name
+        description: "Product related to the open ticket"
+        data_type: varchar
+
+      - name: message_text
+        description: "Latest customer message in the conversation"
+        data_type: varchar
+
+      - name: message_sent_dtt
+        description: "Timestamp of the latest customer message"
+        data_type: timestamp
