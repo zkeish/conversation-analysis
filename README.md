@@ -43,17 +43,20 @@ GEMINI_API_KEY="{API-KEY}"
    ./src/orchestrator.sh
    ```
 
-2. Query data locally with DuckDB UI:
-   ```
-   curl https://install.duckdb.org | sh
-   duckdb ui
-   ```
-
-3. Talk to chatbot in command line:
+2. Talk to chatbot in command line:
    ```
    Open Ticket > {Your ticket context goes here}
    ```
    Note: Type `quit` to exit the chat
+
+### Extra
+
+1. Query data locally with DuckDB UI:
+
+   ```
+   curl https://install.duckdb.org | sh
+   duckdb ui
+   ```
 
 ## Data Pipeline
 The dbt pipeline transforms raw data into structured layers for analysis. Below is a simplified dataflow diagram:
