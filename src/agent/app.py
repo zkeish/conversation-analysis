@@ -21,6 +21,17 @@ class SleepGenie:
     DATABASE = os.path.join(WORKING_DIR, f'pipelines/duckdb/{ENV}.duckdb')
 
     def generate_vector(self, text: str) -> list[float] | None:
+        """Generate a vector embedding for the given text using Gemini API.
+        
+        Args:
+            text: The input text to embed.
+            
+        Returns:
+            A list of 768 float values representing the text embedding.
+            
+        Raises:
+            Exception: If the API fails to generate an embedding.
+        """
         response = CLIENT.models.embed_content(
         model="gemini-embedding-001",
         contents=text,
@@ -32,9 +43,27 @@ class SleepGenie:
             raise Exception('Embedding not found!')
 
     def connect_db(self) -> duckdb.DuckDBPyConnection:
+        """Establish a connection to the DuckDB database.
+        
+        Returns:
+            A DuckDBPyConnection object connected to the configured database.
+        """
         return duckdb.connect(self.DATABASE)
     
-    def pull_context_table(self, conversation_text) -> tuple[str, list[int]]:
+    def pull_context_table(self, conversation_text: str) -> tuple[str, list[int]]:
+        """Retrieve similar resolved tickets from the database using semantic similarity.
+        
+        Generates an embedding for the input conversation and retrieves the top 3 most 
+        similar resolved tickets using cosine similarity of embeddings.
+        
+        Args:
+            conversation_text: The customer's open ticket or conversation text.
+            
+        Returns:
+            A tuple containing:
+                - context (str): Formatted string of the top 3 similar resolved tickets.
+                - keys (list[int]): List of conversation keys for the retrieved tickets.
+        """
         context = ""
         with self.connect_db() as con:
             vector = self.generate_vector(conversation_text)
@@ -59,7 +88,19 @@ Resolution: {resolution_type}
             return context, keys
 
 
-    def ask_chatbot(self, conversation_text) -> str | None:
+    def ask_chatbot(self, conversation_text: str) -> str | None:
+        """Generate a CX support response for an open ticket using an LLM.
+        
+        Retrieves similar resolved tickets as context and uses them to generate a 
+        structured recommendation for resolving the customer's issue.
+        
+        Args:
+            conversation_text: The customer's open ticket or conversation text.
+            
+        Returns:
+            A formatted string containing the LLM's recommended resolution, confidence level,
+            reasoning, and the conversation keys used for context.
+        """
         context, keys = self.pull_context_table(conversation_text)
         keys_str = str(keys)
         prompt = f"""
@@ -119,6 +160,11 @@ conversation_keys used: {keys_str}
 """
 
     def main(self) -> None:
+        """Run the interactive CLI loop for the CX Support Copilot.
+        
+        Continuously prompts the user for open tickets and displays AI-generated 
+        resolutions. Exits when the user enters 'exit' or 'quit'.
+        """
         console = Console(width=80)
         while True:
             ticket = input("Open Ticket > ").strip()
