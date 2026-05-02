@@ -1,14 +1,22 @@
 import os
 import duckdb
 import pandas as pd
-import requests
 from dotenv import load_dotenv
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 import google.genai as genai
 
 load_dotenv()
+
+
+class SleepGenie:
+
+    
+    def pull_context_table(self, conversation_text) -> pd.DataFrame:
+        with self.connect_db() as con:
+            # vector = self.generate_vector(conversation_text)
+            vector = [i for i in range(1,769)]
+            df = con.execute("""select * ,array_cosine_similarity(embedding, ?::float[768]) as score from cx.mtc_cx_resolved order by score desc limit 3""", [vector]).df()
+            return df
 
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
@@ -101,7 +109,7 @@ Return:
 """
     # print(prompt)
     response = client.models.generate_content(
-        model="gemma-3-27b-it",
+        model="gemma-4-31b-it",
         contents=prompt
     )
 

@@ -4,8 +4,8 @@ with cte_group_issues as (
     , issue_type
     , priority
     , cast(count(*) over (partition by issue_type, priority, date(issue_start_dtt)) as double) as issue_count
-  from gold.dim_cx_issue i
-  left join gold.dim_cx_metadata m
+  from {{ ref('dim_cx_issue') }} i
+  left join {{ ref('dim_cx_metadata') }} m
     on i.conversation_key = m.conversation_key
 )
 , cte_severity as (
@@ -13,8 +13,8 @@ with cte_group_issues as (
       date(issue_start_dtt) as issue_date
     , issue_type
     , cast(count(*) over (partition by issue_type, date(issue_start_dtt)) as double) as severity_count
-  from gold.dim_cx_issue i
-  left join gold.dim_cx_metadata m
+  from {{ ref('dim_cx_issue') }} i
+  left join {{ ref('dim_cx_metadata') }} m
     on i.conversation_key = m.conversation_key
   where priority = 'high'
 )
