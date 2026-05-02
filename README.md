@@ -27,16 +27,17 @@ This project ingests customer conversation data, processes it through a dbt pipe
    ./src/orchestrator.sh
    ```
 
-2. Test the dbt pipeline:
-   ```
-   dbt test --target {environment}
-   ```
-
-3. Query data locally with DuckDB UI:
+2. Query data locally with DuckDB UI:
    ```
    curl https://install.duckdb.org | sh
    duckdb ui
    ```
+   
+3. Talk to chatbot in command line:
+   ```
+   Open Ticket > {Your ticket context goes here}
+   ```
+   Note: Type `quit` to exit the chat
 
 ## Data Pipeline
 The dbt pipeline transforms raw data into structured layers for analysis. Below is a simplified dataflow diagram:

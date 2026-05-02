@@ -218,7 +218,7 @@ __marimo__/
 .streamlit/secrets.toml
 
 example/
-# external_data/
+external_data/
 raw/
 target/
 dbt_packages/
