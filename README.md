@@ -4,6 +4,12 @@ Parses raw conversation data and intelligently provides context regarding anomal
 ## Overview
 This project ingests customer conversation data, processes it through a dbt pipeline in DuckDB, and generates insights like resolved issues and anomaly detection.
 
+## Part 1
+[Anomaly detection notebook](src/eda/anomalies.ipynb)
+
+## Part 2
+[Chatbot](src/agent/app.py)
+
 ## Prerequisites
 - Python 3.12
 - DuckDB (for local querying)
@@ -55,3 +61,51 @@ F --> G
 D --> H[CX Layer <br/> Anomaly detection view]
 E --> H
 ```
+
+## Database Schema
+The data is organized in a star schema with dimension and fact tables:
+
+```mermaid
+erDiagram
+
+    FACT_CX_MESSAGE ||--o{ DIM_CX_ISSUE : "has"
+    FACT_CX_MESSAGE }o--|| DIM_CX_METADATA : "has"
+    
+    DIM_CX_ISSUE {
+        ubigint issue_key "surrogate key, PK"
+        ubigint conversation_key "FK"
+        varchar primary_issue
+        varchar issue_type
+        varchar secondary_issue
+        boolean issue_resolved
+        varchar resolution_type
+        varchar resolution_notes
+    }
+    
+    DIM_CX_METADATA {
+        ubigint conversation_key "surrogate key, PK, FK"
+        ubigint customer_key
+        varchar conversation_id
+        varchar customer_id
+        varchar category
+        varchar issue_type
+        varchar product
+        varchar status
+        varchar priority
+        timestamp conversation_first_message_dtt
+        timestamp conversation_last_message_dtt
+    }
+    
+    FACT_CX_MESSAGE {
+        ubigint message_key "surrogate key, PK"
+        ubigint conversation_key "FK"
+        ubigint customer_key "FK"
+        varchar message_id
+        varchar sender_role
+        varchar message_text
+        timestamp message_sent_dtt
+    }
+    
+    
+```
+
