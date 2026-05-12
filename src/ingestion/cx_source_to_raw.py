@@ -95,6 +95,7 @@ class S2R:
                 target = os.path.join(self.TARGET_FOLDER_PATH, target_file_name)
                 with self.connect_db() as con:
                     df = con.sql(f"select * from '{source}'").to_arrow_table()
+                    Utils.mkdirs(self.TARGET_FOLDER_PATH)
                     pq.write_table(df, target)
                     con.sql(f"insert into {self.TRACKING_TABLE} (file_name, ingest_dtt) VALUES ('{file}', CURRENT_TIMESTAMP);")
             except Exception as e:
